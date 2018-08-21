@@ -28,6 +28,9 @@ def getoptions():
                              "average per BED interval [%(default)s]")
     parser.add_argument('-c', '--cores', type=int, default=4,
                         help="Number of processing cores [%(default)s]")
+    parser.add_argument('-d', '--cores2', type=int, default=2,
+                        help="Number of processing cores for summary step. "
+                        "[%(default)s]")
     parser.add_argument('-v', '--version', action='version',
         version='%(prog)s ' + __version__)
     args = parser.parse_args()
@@ -78,7 +81,7 @@ def remove_unused_bedgraphs(files, bed_chroms):
     return new_consfiles
 
 
-def subset_conservation(bd, bg):
+def subset_conservation(bg, bd):
     """
     Perform intersectBed between BED file and chromosome-specific
     bedGraph file
@@ -115,7 +118,7 @@ def process(bg, bd, summarize_scores=False):
     """
     This function will be called by parallel processing.
     """
-    fn = subset_conservation(bd, bg)
+    fn = subset_conservation(bg, bd)
 
     if summarize_scores:
         results = summarize(fn, delete_input=True)
@@ -138,12 +141,15 @@ def main():
     # Multipool
     eprint("Intersecting...")
     pool = multiprocessing.Pool(args.cores)
-    func = partial(process, bd=bed, summarize_scores=args.summarize)
+    func = partial(subset_conservation, bd=bed)
     results = pool.map(func, args.consfiles)
-    #if args.summarize:
-        #func = partial(summarize, delete_input=True)
-        #results = pool.map(summarize, results)
     pool.close()
+
+    if args.summarize:
+        pool = multiprocessing.Pool(args.cores2)
+        func = partial(summarize, delete_input=True)
+        results = pool.map(summarize, results)
+        pool.close()
 
     for item in results:
         if item is not None:

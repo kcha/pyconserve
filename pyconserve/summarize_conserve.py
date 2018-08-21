@@ -16,7 +16,7 @@ def getoptions():
     return args
 
 
-def load_intersect(filename):
+def load_intersect(filename, **kwargs):
     """
     Load intersected BED file as DataFrame
     """
@@ -24,15 +24,29 @@ def load_intersect(filename):
                 'chr2', 'start2', 'end2', 'score2', 'length']
     usecolnames = ['chr', 'start', 'end', 'name', 'score', 'strand',
                    'score2', 'length']
-    df = pd.read_table(filename, names=colnames)
-    return reduce_df.reduce_mem_usage(df)[0]
+    column_types = {   
+        'chr': 'category',
+        'end': 'uint32',
+        'length': 'uint16',
+        'name': 'category',
+        'score': 'float32',
+        'score2': 'float32',
+        'start': 'uint32',
+        'strand': 'category'
+    }
+
+    df = pd.read_table(filename, names=colnames, 
+                       usecols=usecolnames,
+                       dtype=column_types)
+    #return reduce_df.reduce_mem_usage(df, **kwargs)[0]
+    return df
    
 
 def groupby_cons(df):
     """
     Group by BED interval and report the average score
     """
-    df['sum'] = df['score2'] * df['length']
+    #df['sum'] = df['score2'] * df['length']
     result = df.groupby(df.columns[0:6].tolist())\
                .apply(compute_average_cons)\
                .reset_index(name="avg_cons")
