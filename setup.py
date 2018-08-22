@@ -21,7 +21,7 @@ setup(name='pyconserve',
       entry_points={
             'console_scripts': [
                 'pyconserve = pyconserve.pyconserve:main',
-                'summarize_conserve = pyconserve.summarize_conserve:main'
+                'summarize_conserve = pyconserve.summarize:main'
             ]
       }
 )

@@ -22,17 +22,15 @@ def load_intersect(filename, **kwargs):
     """
     colnames = ['chr', 'start', 'end', 'name', 'score', 'strand',
                 'chr2', 'start2', 'end2', 'score2', 'length']
-    usecolnames = ['chr', 'start', 'end', 'name', 'score', 'strand',
+    usecolnames = ['chr', 'start', 'end', 'name', 
                    'score2', 'length']
     column_types = {   
         'chr': 'category',
         'end': 'uint32',
         'length': 'uint16',
         'name': 'category',
-        'score': 'float32',
         'score2': 'float32',
         'start': 'uint32',
-        'strand': 'category'
     }
 
     df = pd.read_table(filename, names=colnames, 
@@ -46,8 +44,7 @@ def groupby_cons(df):
     """
     Group by BED interval and report the average score
     """
-    #df['sum'] = df['score2'] * df['length']
-    result = df.groupby(df.columns[0:6].tolist())\
+    result = df.groupby(df.columns[0:4].tolist())\
                .apply(compute_average_cons)\
                .reset_index(name="avg_cons")
     return result

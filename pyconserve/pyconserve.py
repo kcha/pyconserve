@@ -10,7 +10,7 @@ import pandas as pd
 import numpy as np
 
 from . import reduce_df
-from . import summarize_conserve as sc
+from . import summarize as sc
 from .version import __version__
 
 
