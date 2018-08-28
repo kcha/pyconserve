@@ -1,5 +1,6 @@
 import pdb
 import sys
+import os
 import os.path
 import argparse
 import multiprocessing
@@ -31,9 +32,17 @@ def getoptions():
     parser.add_argument('-d', '--cores2', type=int, default=2,
                         help="Number of processing cores for summary step. "
                         "[%(default)s]")
+    parser.add_argument('-S', '--splitdir', type=str, default=None,
+                        help="Directory to keep intersections separate for "
+                             "each conservation file. e.g. chromosome-specific. "
+                             "Output won't be written to stdout. [%(default)s]")
     parser.add_argument('-v', '--version', action='version',
         version='%(prog)s ' + __version__)
     args = parser.parse_args()
+
+    if args.splitdir and not os.path.exists(args.splitdir):
+        os.makedirs(args.splitdir)
+
     return args
 
 
@@ -45,9 +54,9 @@ def get_chrom_from_file(filename):
     """
     Extract chromosome from filename
     """
-    m = re.match(r"^(chr[^.]+)", os.path.basename(filename))
+    m = re.match(r"^(chr[^.]+)\.(.+).bedGraph.gz", os.path.basename(filename))
     if m:
-        return m.group(1)
+        return m.groups()
     else:
         raise Exception("Unable to determine chromosome prefix")
 
@@ -88,7 +97,7 @@ def subset_conservation(bg, bd):
     """
     # Load bedGraph
     cons = pybedtools.BedTool(bg)
-    chrom = get_chrom_from_file(bg)
+    chrom, track = get_chrom_from_file(bg)
 
     # Filter bed file
     chrom_bd = subset_chrom(bd, chrom)
@@ -97,7 +106,9 @@ def subset_conservation(bg, bd):
         fn = None
     else:
         assert len(chrom_bd) > 0
-        inter = chrom_bd.intersect(cons, wo=True, sorted=True)
+        outfile = os.path.join(pybedtools.get_tempdir(),
+                               'pybedtools.%s.%s.tmp' % (chrom, track))
+        inter = chrom_bd.intersect(cons, wo=True, sorted=True, output=outfile)
         fn = inter.fn
 
     os.remove(chrom_bd.fn)
@@ -156,10 +167,17 @@ def main():
             if args.summarize:
                 item.to_csv(sys.stdout, sep="\t", index=False, header=False)
             else:
-                with open(item, 'r') as fin:
-                    for line in fin:
-                        print(line.strip())
-                os.remove(item)
+                if args.splitdir:
+                    os.rename(item, 
+                              os.path.join(args.splitdir, 
+                                           os.path.basename(item)
+                                          )
+                             )
+                else:
+                    with open(item, 'r') as fin:
+                        for line in fin:
+                            print(line.strip())
+                    os.remove(item)
 
 
 if __name__ == '__main__':
