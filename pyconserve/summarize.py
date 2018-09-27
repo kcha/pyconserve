@@ -23,7 +23,7 @@ def load_intersect(filename, **kwargs):
     colnames = ['chr', 'start', 'end', 'name', 'score', 'strand',
                 'chr2', 'start2', 'end2', 'score2', 'length']
     usecolnames = ['chr', 'start', 'end', 'name', 
-                   'score2', 'length']
+                   'score2', 'length', 'start2', 'end2']
     column_types = {   
         'chr': 'category',
         'end': 'uint32',
@@ -31,6 +31,8 @@ def load_intersect(filename, **kwargs):
         'name': 'category',
         'score2': 'float32',
         'start': 'uint32',
+        'start2': 'uint32',
+        'end2': 'uint32'
     }
 
     df = pd.read_table(filename, names=colnames, 
@@ -54,7 +56,8 @@ def compute_average_cons(data):
     """
     Compute averge conservation 
     """
-    return sum(data.score2 * data.length) / sum(data.length)
+    le = data.end2 - data.start2
+    return sum(data.score2 * le) / sum(le)
 
 
 def main():
@@ -70,6 +73,7 @@ def main():
         df = load_intersect(args.bedfile[0])
 
     df = groupby_cons(df)
+    df = df.drop(['start2', 'end2'])
 
     df.to_csv(sys.stdout, sep="\t", index=False, header=False)
 
