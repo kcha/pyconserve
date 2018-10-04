@@ -36,6 +36,9 @@ def getoptions():
                         help="Directory to keep intersections separate for "
                              "each conservation file. e.g. chromosome-specific. "
                              "Output won't be written to stdout. [%(default)s]")
+    parser.add_argument('-t', '--temp', type=str,
+                        help="set temp directory [{}]".
+                        format(pybedtools.get_tempdir()))
     parser.add_argument('-v', '--version', action='version',
         version='%(prog)s ' + __version__)
     args = parser.parse_args()
