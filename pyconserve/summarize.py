@@ -23,7 +23,7 @@ def load_intersect(filename, **kwargs):
     colnames = ['chr', 'start', 'end', 'name', 'score', 'strand',
                 'chr2', 'start2', 'end2', 'score2', 'length']
     usecolnames = ['chr', 'start', 'end', 'name', 
-                   'score2', 'length', 'start2', 'end2']
+                   'score2', 'start2', 'end2']
     column_types = {   
         'chr': 'category',
         'end': 'uint32',
@@ -54,7 +54,7 @@ def groupby_cons(df):
 
 def compute_average_cons(data):
     """
-    Compute averge conservation 
+    Compute average conservation 
     """
     le = data.end2 - data.start2
     return sum(data.score2 * le) / sum(le)
