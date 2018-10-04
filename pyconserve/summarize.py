@@ -73,7 +73,7 @@ def main():
         df = load_intersect(args.bedfile[0])
 
     df = groupby_cons(df)
-    df = df.drop(['start2', 'end2'])
+    #df = df.drop(['start2', 'end2'])
 
     df.to_csv(sys.stdout, sep="\t", index=False, header=False)
 
