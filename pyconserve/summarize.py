@@ -34,7 +34,7 @@ def load_intersect(filename, chunksize=2000000, **kwargs):
         'chr': 'category',
         'end': 'uint32',
         'length': 'uint16',
-        'name': 'category',
+        'name': 'object',
         'score2': 'float32',
         'start': 'uint32',
         'start2': 'uint32',
