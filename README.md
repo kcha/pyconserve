@@ -22,12 +22,12 @@ be run using parallelization to speed up runtime.
   1. Install bedtools
   2. Clone the pyconserve GitHub repo
 
-        git clone https://www.github.com/kcha/pyconserve.git
-        cd pyconserve
+          git clone https://www.github.com/kcha/pyconserve.git
+          cd pyconserve
 
   3. Install the package
 
-        python setup.py install
+          python setup.py install
  
 
 ## Preparing conservation files
@@ -39,20 +39,20 @@ them to bedGraph format using the UCSC tools `wigToBigWig` and
   1. Download Phastcons or PhyloP wiggle files (one chromosome per file) from UCSC 
   1. Convert wiggle to bigWig using [`wigToBigWig`](https://anaconda.org/bioconda/ucsc-wigtobigwig). 
 
-        wigToBigWig chr1.phastCons100way.wigFix.gz hg19.chrom_sizes.txt \
-            chr1.phastCons100way.bigWig
+          wigToBigWig chr1.phastCons100way.wigFix.gz hg19.chrom_sizes.txt \
+              chr1.phastCons100way.bigWig
             
      This step requires a file containing the chromosome sizes of your species.
 
   1. Convert bigWig to bedGraph using [`bigWigToBedGraph`](https://anaconda.org/bioconda/ucsc-bigwigtobedgraph)
 
-        bigWigToBedGraph chr1.phastCons100way.bigWig chr1.phastCons100way.bedGraph
+          bigWigToBedGraph chr1.phastCons100way.bigWig chr1.phastCons100way.bedGraph
 
   1. (optional) To save space, compress the bedGraph file and remove the wiggle
      and bigWig files
 
-        rm -v chr1.phastCons100way.wigFix.gz chr1.phastCons100way.bigWig
-        gzip -vf chr1.phastCons100way.bedGraph
+          rm -v chr1.phastCons100way.wigFix.gz chr1.phastCons100way.bigWig
+          gzip -vf chr1.phastCons100way.bedGraph
 
 ## Run `pyconserve`
 
