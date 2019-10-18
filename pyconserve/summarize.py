@@ -3,7 +3,6 @@ import argparse
 import pandas as pd
 import multiprocessing
 
-from . import reduce_df
 from .version import __version__
 
 def getoptions():
