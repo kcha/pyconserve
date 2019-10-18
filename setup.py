@@ -18,6 +18,7 @@ setup(name='pyconserve',
       install_requires=['setuptools',
                         'pandas >= 0.17',
                         'pybedtools >= 0.7.9'],
+      python_requires='~=3.6',
       entry_points={
             'console_scripts': [
                 'pyconserve = pyconserve.pyconserve:main',
