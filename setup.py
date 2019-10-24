@@ -16,7 +16,7 @@ setup(name='pyconserve',
       license='MIT',
       packages=find_packages(),
       install_requires=['setuptools',
-                        'pandas >= 0.17',
+                        'pandas >= 0.24',
                         'pybedtools >= 0.7.9'],
       python_requires='~=3.6',
       entry_points={
