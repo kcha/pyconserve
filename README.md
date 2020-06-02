@@ -76,9 +76,9 @@ Alternatively, the above two commands can be chained together as follows:
     pyconserve a.bed chr*.phastCons100way.bedGraph.gz | \
         summarize_conserve - > summarized.bed
 
-## Credit
+## Acknowledgements
 
-This software is inspired by previous work by others:
+This software is inspired by previous work from others:
 
   - Extracting sequence conservation: https://davetang.org/muse/2012/08/07/sequence-conservation-in-vertebrates/
   - Multiprocessing using pybedtools: https://daler.github.io/pybedtools/3-brief-examples.html#example-3-count-reads-in-introns-and-exons-in-parallel
